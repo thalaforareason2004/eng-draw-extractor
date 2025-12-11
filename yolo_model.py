@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image
 from ultralytics import YOLO
 
-# Path to YOLO weights (weights/best.pt relative to this file)
+# weights/best.pt relative to this file
 _WEIGHTS_PATH = Path(__file__).resolve().parent / "weights" / "best.pt"
 
 _yolo_model: Optional[YOLO] = None  # cached model
@@ -29,8 +29,7 @@ def run_yolo_on_page(image: Image.Image, conf_threshold: float = 0.3) -> Dict[st
     model = get_yolo_model()
     results = model(img_rgb, conf=conf_threshold)[0]
 
-    # results.plot() returns an RGB numpy array
-    annotated = results.plot()
+    annotated = results.plot()  # RGB numpy array
     annotated_image = Image.fromarray(annotated)
 
     crops: List[Dict[str, Any]] = []
@@ -60,7 +59,7 @@ def run_yolo_on_page(image: Image.Image, conf_threshold: float = 0.3) -> Dict[st
                 "cls_id": cls_id,
                 "cls_name": cls_name,
                 "conf": conf,
-                "box": (x1, y1, x2, y2),
+                "box": [x1, y1, x2, y2],
                 "crop_image": crop_img,
             }
         )
